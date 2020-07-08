@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallel Plate Capacitor</title>
+
+    <link rel="stylesheet" type="text/css" href="styles/semantic-ui/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/semantic-ui/dropdown.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/progress-bar/loading-bar.css">
+
+    <script src="scripts/jquery-3.1.1.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="scripts/semantic-ui/semantic.min.js"></script>
+    <script src="scripts/semantic-ui/modal.min.js"></script>
+    <script src="scripts/semantic-ui/dropdown.min.js"></script>
+
+    <script src="scripts/RGraph.svg.common.core_d.js"></script>
+    <script src="scripts/RGraph.svg_d.line.js"></script>
+    <!-- <script src="styles/progress-bar/loading-bar.js"></script> -->
+
+</head>
+
+<body>
+
+    <div class="ui right sidebar inverted vertical menu">
+        <div id="capacitor-setting-group" class="sub-menu">
+            <h4>Capacitor</h4>
+            <div class="divider"></div>
+            <div>
+                <p id="distance-label" class="setting-label">Distance Between Plates</p>
+                <p id="distance-value" class="setting-value">12 mm</p>
+            </div>
+            <input type="range" min="1" max="178" value="6" step="1" class="slider" id="distance-slider">
+
+            <div class="divider"></div>
+
+            <div id="circle-shape-setting">
+                <div>
+                    <p id="radius-plate-label" class="setting-label">Plate Radius</p>
+                    <p id="radius-plate-value" class="setting-value">70 mm</p>
+                </div>
+                <input type="range" min="5" max="100" value="50" step="1" class="slider" id="radius-slider">
+            </div>
+
+          
+        </div>
+
+        <div id="battery-setting-group" class="sub-menu">
+            <h4>Battery</h4>
+            <div class="divider"></div>
+            <div>
+                <p id="voltage-label" class="setting-label">Voltage</p>
+                <p id="voltage-value" class="setting-value">9 V</p>
+            </div>
+        </div>
+
+      
+    </div>
+
+    <div class="pusher">
+        <div id="cap-status-panel" class="display-panel">
+            <table>
+                <tr>
+                    <td>
+                        <p class="label">Distance (d)</p>
+                    </td>
+                    <td>
+                        <p class="value" id="cap-disp-dist-val">1.23 mm</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="label">Plate Area (A)</p>
+                    </td>
+                    <td>
+                        <p class="value" id="cap-area-val">0.25 m<sup>2</sup></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <p class="label">Capacitance</p>
+                    </td>
+                    <td>
+                        <p class="value">1.25 &#181;F</p>
+                    </td>
+                </tr>
+
+                <tr id="tr-stored-eng">
+                    <td>
+                        <p class="label">Stored Energy</p>
+                    </td>
+                    <td>
+                        <p class="value" id="cap-se-dist-val">0 pJ</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="w3-transparent" style="border: 1px solid #00000022; border-radius: 3px;">
+                            <div class="w3-green" step="0.01" id="progress-stored-energy" style="height:3px;width:20%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div id="battery-status-panel" class="display-panel">
+            <table>
+                <tr>
+                    <td>
+                        <p class="label">Voltage</p>
+                    </td>
+                    <td>
+                        <p class="value" id="batt-disp-volt-val">9 V</p>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div id="html-panel">
+
+        </div>
+
+        <div id="toolbar">
+            <div id="status-panel">
+                <div id="info-panel">
+                    <div class="row">
+                        <div class="label">Distance</div>
+                        <div class="myProgress">
+                            <div id="progress-dist" class="myBar"></div>
+                        </div>
+                        <div id="value-dist" class="value"></div>
+                    </div>
+                    <div class="row">
+                        <div class="label">Area</div>
+                        <div class="myProgress">
+                            <div id="progress-area" class="myBar"></div>
+                        </div>
+                        <div id="value-area" class="value"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="label">Capacitance</div>
+                        <div class="myProgress">
+                            <div id="progress-cap" class="myBar"></div>
+                        </div>
+                        <div id="value-cap" class="value"></div>
+                    </div>
+                    <div></div>
+                </div>
+                <ul id="status-list">
+                    <!-- <li class="success">Battery is fully charged.</li>
+                    <li class="info">Current flows back to battery.</li> -->
+                </ul>
+            </div>
+
+            <div id="button-panel">
+                <button id="btnSetting" class="mini ui icon black basic button">
+                    <i class="setting icon" size='large'></i>
+                </button>
+                <button id="btnFullScreen" class="mini ui icon black basic button">
+                    <i class="window maximize outline icon" size='large'></i>
+                </button>
+
+                <button id="btnInfo" class="mini ui icon black basic button">
+                    <i class="info icon" size='large'></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="view-css">
+
+        </div>
+        <div id="view-3d"></div>
+    </div>
+
+    <!-- Info dialog -->
+    <div class="ui basic modal">
+        <i class="close icon"></i>
+
+        <div class="header">Parallel Plate Capacitor</div>
+        <div class="content">
+            <p class="paragraph">အခြေခံ ကျောင်းသား/သူ များအတွက် သင်ထောက်ကူအဖြစ် ရည်ရွယ်ပါသည်။</p>
+            <p>Developed by <i>V2</i> Group</p>
+            <p>Contact <b>myothantkyaw787@gmail.com</b></p>
+        </div>
+    </div>
+
+    <div id="graph-container">
+        <div class="graph-container-row">
+            <div class="graph-container-cell">
+                <div class="graph-title">Voltage</div>
+                <div id="voltage-graph"></div>
+            </div>
+            <div class="graph-container-cell">
+                <div class="graph-title">Energy</div>
+                <div id="energy-graph"></div>
+            </div>
+        </div>
+        <div class="graph-container-row">
+            <div class="graph-container-cell">
+                <div id="charge-graph-title" class="graph-title">Stored Charge</div>
+                <div id="charge-graph"></div>
+            </div>
+            <div class="graph-container-cell">
+                <table id="table-changing-values">
+                    <tr>
+                        <td >Volt(V)</td>
+                        <td  id="value-volt" style="color: #009aff;">0.02 V</td>
+                    </tr>
+                    <tr>
+                        <td>Energy(E)</td>
+                        <td id="value-energy" style="color: #00ff00;">1.22 pJ</td>
+                    </tr>
+                    <tr>
+                        <td>Charge(C)</td>
+                        <td id="value-charge" style="color: #fd370f;">12.33 C</td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="ui.js"></script>
+
+    <script src="app_bundle_3d.js"></script>
+
+
+</body>
+
+</html>
